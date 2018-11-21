@@ -36,6 +36,11 @@ public class Player : MonoBehaviour
     private float _moveSpeed = 6f;
 
     /// <summary>
+    /// 鼠标按下的位置
+    /// </summary>
+    private Vector3 _startPosition = Vector3.zero;
+
+    /// <summary>
     /// 右键在屏幕滑动时候，上一次的位置。（用来控制旋转）
     /// </summary>
     private Vector3 _lastPosition = Vector3.zero;
@@ -86,13 +91,18 @@ public class Player : MonoBehaviour
             {
                 _selectTran = null;
             }
+
+            //把点击到的物体，记录到全局变量中。
+            GlobalVariable.Instance.TouchObject = _selectTran;
         }
 
         //鼠标放开，重置变量。
         if (Input.GetMouseButtonUp(0))
         {
             _isMouseLeftPress = false;
-            _selectTran = null;
+
+            //暂时先不清空点击到的物体。
+            //_selectTran = null;
         }
 
         if (_isMouseLeftPress)

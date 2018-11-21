@@ -14,16 +14,16 @@ public class ModelCategory : MonoBehaviour
         floor = 1 << 1,      //地板
         wall = 1 << 2,       //墙壁
         hang = 1 << 3,       //挂饰 (例如壁画之类的, 能挂在墙上的)
-        furniture = 1 << 4,  //家具 (例如椅子，桌子)
+        furniture = 1 << 4,  //家具 (例如椅子，桌子,电视，床,水杯，台灯)
         ceiling = 1 << 5     //天花板
     }
 
     //[Title("我是哪种类型")]
-    [HideInInspector]
+    //[HideInInspector]
     public ECategory selfCategory;
 
     //[Title("能被哪种类型  贴在自身上")]
-    [HideInInspector]
+    //[HideInInspector]
     public ECategory recognitionCategory;
     
     void Awake()
@@ -59,5 +59,15 @@ public class ModelCategory : MonoBehaviour
             selfCategory = ECategory.none;
             recognitionCategory = ECategory.none;
         }
+    }
+
+    /// <summary>
+    /// 在场景中，是否能被移除。
+    /// </summary>
+    /// <returns></returns>
+    public bool CanDelete()
+    {
+        //目前只有挂饰和家具能被删除的。
+        return (selfCategory & (ECategory.hang | ECategory.furniture)) > 0;
     }
 }

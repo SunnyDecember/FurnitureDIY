@@ -23,6 +23,9 @@ public class DIYCanvas : MonoBehaviour
 
     [SerializeField]
     private Button _cup;
+
+    [SerializeField]
+    private Button _deleteModel;
      
     void Start ()
     {
@@ -45,6 +48,19 @@ public class DIYCanvas : MonoBehaviour
         _cup.onClick.AddListener(() =>
         {
             EventCenter.Instance.PostEvent(EventName.CreateModel, "furniture_cup");
+        });
+
+        //删除模型
+        _deleteModel.onClick.AddListener(()=> 
+        {
+            Transform TouchObject = GlobalVariable.Instance.TouchObject;
+            if (null != TouchObject && TouchObject.GetComponent<ModelCategory>())
+            {
+                bool canDelete = TouchObject.GetComponent<ModelCategory>().CanDelete();
+
+                if(canDelete)
+                    GameObject.Destroy(TouchObject.gameObject);
+            }
         });
     }
 }
