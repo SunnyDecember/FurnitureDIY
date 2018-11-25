@@ -40,6 +40,13 @@ public class ResourceManager
     public GameObject LoadModel(Transform parent, string modelName)
     {
         GameObject obj = GameObject.Instantiate(Resources.Load("Model/" + modelName)) as GameObject;
+
+        GameObject tools = new GameObject("Tools");
+        tools.transform.SetParent(obj.transform);
+        tools.transform.localPosition = Vector3.zero;
+        tools.transform.localScale = Vector3.one;
+        tools.transform.localEulerAngles = Vector3.zero;
+
         obj.transform.parent = parent;
         obj.transform.localPosition = Vector3.zero;
         return obj;

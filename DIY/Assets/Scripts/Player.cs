@@ -47,12 +47,12 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
-        
+
     }
-     
-    void Start ()
+
+    void Start()
     {
-        
+
     }
 
     void Update()
@@ -85,7 +85,8 @@ public class Player : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                _selectTran = hit.transform;
+                if (hit.transform.tag != "AxisMove")
+                    _selectTran = hit.transform;
             }
             else
             {
@@ -124,7 +125,7 @@ public class Player : MonoBehaviour
                     continue;
 
                 //射中的物体带有ModelCategory脚本。
-                if (null != hitTran.GetComponent<ModelCategory>())
+                if (null != hitTran.GetComponent<ModelCategory>() && hitTran.tag != "AxisMove")
                 {
                     ModelCategory hitCategory = hitTran.GetComponent<ModelCategory>();
                     ModelCategory selectCategory = _selectTran.GetComponent<ModelCategory>();
@@ -157,7 +158,7 @@ public class Player : MonoBehaviour
                                 _selectTran.rotation = Quaternion.LookRotation(hitInfo.normal);
                             }
                         }
-                        
+
                         Debug.Log("Player.Update() 射中点的法向量  " + hitInfo.normal.x + " " + hitInfo.normal.y + " " + hitInfo.normal.z);
                     }
                 }
@@ -213,7 +214,7 @@ public class Player : MonoBehaviour
             angle = Mathf.Clamp(angle, -40, 40);
             quaternion = Quaternion.AngleAxis(angle, axis);
             _eye.transform.localRotation = quaternion;
-            
+
             //保存当前的鼠标移动位置
             _lastPosition = Input.mousePosition;
         }

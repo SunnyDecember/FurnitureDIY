@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using liu;
+using liu.MoveTool;
 using UnityEngine.UI;
 
 /* Author:       Running
@@ -26,7 +28,10 @@ public class DIYCanvas : MonoBehaviour
 
     [SerializeField]
     private Button _deleteModel;
-     
+
+    [SerializeField]
+    private Button _loadModel;
+
     void Start ()
     {
         _environmentColorButton.onClick.AddListener(()=> 
@@ -50,6 +55,11 @@ public class DIYCanvas : MonoBehaviour
             EventCenter.Instance.PostEvent(EventName.CreateModel, "furniture_cup");
         });
 
+        _loadModel.onClick.AddListener(() =>
+        {
+            GetModelPath.OpenFileDialog();
+        });
+
         //删除模型
         _deleteModel.onClick.AddListener(()=> 
         {
@@ -58,8 +68,20 @@ public class DIYCanvas : MonoBehaviour
             {
                 bool canDelete = TouchObject.GetComponent<ModelCategory>().CanDelete();
 
-                if(canDelete)
+                if (canDelete)
+                {
+                    Transform tools = TouchObject.Find("Tools");
+                    if (tools.childCount > 0)
+                    {
+                        Transform dragVectorTool = tools.Find("DragVector");
+                        if (null != dragVectorTool)
+                        {
+                            ControlObjMove.M_Instance.SetParentNull();
+                        }
+                    }
+                    if(TouchObject)
                     GameObject.Destroy(TouchObject.gameObject);
+                }
             }
         });
     }
