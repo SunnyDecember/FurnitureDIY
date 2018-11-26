@@ -76,7 +76,7 @@ public class DIYCanvas : MonoBehaviour
                         Transform dragVectorTool = tools.Find("DragVector");
                         if (null != dragVectorTool)
                         {
-                            ControlObjMove.M_Instance.SetParentNull();
+                            ControlObjMove.Instance.SetParentNull();
                         }
                     }
                     if(TouchObject)

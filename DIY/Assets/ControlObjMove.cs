@@ -10,9 +10,15 @@ namespace liu.MoveTool
     /// </summary>
     public class ControlObjMove : MonoBehaviour
     {
+        private static ControlObjMove _instance;
 
-        static ControlObjMove _instance;
-        public static ControlObjMove M_Instance
+        private bool isMouseDrag = false;
+
+        private PointAxis PA;
+
+        private PointCenterAxis PCA;
+
+        public static ControlObjMove Instance
         {
             get
             {
@@ -20,11 +26,6 @@ namespace liu.MoveTool
                 return _instance;
             }
         }
-
-        private bool isMouseDrag = false;
-
-        private PointAxis PA;
-        private PointCenterAxis PCA;
 
         void Update()
         {
