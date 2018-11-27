@@ -46,7 +46,11 @@ namespace liu
                 FileInfo fi = new FileInfo(filePath);
                 if (fi.Extension == ".fbx" || fi.Extension == ".obj")
                 {
-                    LoadModelFormLocal.LoadModel(filePath);
+                    GameObject go = LoadModelFormLocal.LoadModel(filePath);
+                    if (null != go)
+                    {
+                        //进行
+                    }
                 }
 
                 Debug.Log("Selected file with full path: {0}" + ofn.file);
