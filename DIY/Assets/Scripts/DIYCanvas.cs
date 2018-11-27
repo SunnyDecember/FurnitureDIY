@@ -32,6 +32,12 @@ public class DIYCanvas : MonoBehaviour
     [SerializeField]
     private Button _loadModel;
 
+    [SerializeField]
+    private Button _loadChandelier;
+
+    [SerializeField]
+    private Button _loadWallPaper;
+
     void Start ()
     {
         _environmentColorButton.onClick.AddListener(()=> 
@@ -58,6 +64,16 @@ public class DIYCanvas : MonoBehaviour
         _loadModel.onClick.AddListener(() =>
         {
             GetModelPath.OpenFileDialog();
+        });
+
+        _loadChandelier.onClick.AddListener(() =>
+        {
+            EventCenter.Instance.PostEvent(EventName.CreateModel, "chandelier_light");
+        });
+
+        _loadWallPaper.onClick.AddListener(() =>
+        {
+            EventCenter.Instance.PostEvent(EventName.CreateModel, "hang_wallPaper");
         });
 
         //删除模型

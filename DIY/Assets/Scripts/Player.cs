@@ -60,7 +60,22 @@ public class Player : MonoBehaviour
 
     private void mouseLeftUp()
     {
-        
+        if (null != RayEvent.Instance.clickObjectTargetObj)
+        {
+            ModelCategory selectCategory = RayEvent.Instance.clickObjectOfLeftButton.GetComponentInParent<ModelCategory>();
+            ModelCategory targetObjCategory = RayEvent.Instance.clickObjectTargetObj.GetComponentInParent<ModelCategory>();
+            //拖动的是墙纸，目标物体是墙
+            if (selectCategory.selfCategory == targetObjCategory.recognitionCategory && selectCategory.name.Contains("wallPaper"))
+            {
+                //给墙指定上墙纸的贴图，然后销毁墙纸
+                Texture wallTexture = selectCategory.GetComponent<MeshRenderer>().material.mainTexture;
+                targetObjCategory.GetComponent<MeshRenderer>().material.mainTexture = wallTexture;
+                //给RayEvent.Instance.clickObjectOfLeftButton = null，防止后续操作的空引用
+                GameObject destroyObj = RayEvent.Instance.clickObjectOfLeftButton.gameObject;
+                RayEvent.Instance.clickObjectOfLeftButton = null;
+                Destroy(destroyObj);
+            }
+        }
     }
 
     /// <summary>
@@ -99,6 +114,7 @@ public class Player : MonoBehaviour
                     {
                         clickObjectOfLeftButton.position = hitInfo.point;
                         clickObjectOfLeftButton.rotation = Quaternion.LookRotation(hitInfo.normal);
+                        RayEvent.Instance.clickObjectTargetObj = hitTran;
                     }
                     //如果是天花板
                     else if ((hitCategory.selfCategory & ModelCategory.ECategory.ceiling) > 0)

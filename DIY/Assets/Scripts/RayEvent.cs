@@ -37,6 +37,11 @@ public class RayEvent
     /// </summary>
     public Transform rawObjectOfLeftButton;
 
+    // <summary>
+    /// 点击的物体的目标吸附物体(从鼠标点下到放开，为一次生命周期)
+    /// </summary>
+    public Transform clickObjectTargetObj;
+
     /// <summary>
     /// 鼠标左键是否按下(点击并拖拽场景中的物体)
     /// </summary>
@@ -125,13 +130,19 @@ public class RayEvent
 
             if (Physics.Raycast(ray, out hit))
             {
-                clickObjectOfLeftButton = hit.transform;
-                rawObjectOfLeftButton = hit.transform;
+                //设置锚点的位置调整
+                ModelCategory modelCategory = hit.transform.GetComponentInParent<ModelCategory>();
+                if (modelCategory)
+                {
+                    clickObjectOfLeftButton = modelCategory.transform;
+                    rawObjectOfLeftButton = modelCategory.transform;
+                }
             }
             else
             {
                 clickObjectOfLeftButton = null;
                 rawObjectOfLeftButton = null;
+                clickObjectTargetObj = null;
             }
 
             if (null != mouseLeftDownEvnet)
@@ -143,10 +154,11 @@ public class RayEvent
         //左键抬起
         if (Input.GetMouseButtonUp(0))
         {
+            if (null != mouseLeftUpEvnet) mouseLeftUpEvnet();
+
             isMouseLeftPress = false;
             rawObjectOfLeftButton = null;
-
-            if (null != mouseLeftUpEvnet) mouseLeftUpEvnet();
+            clickObjectTargetObj = null;
         }
 
         //左键滑动

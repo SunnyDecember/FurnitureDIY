@@ -15,7 +15,9 @@ public class ModelCategory : MonoBehaviour
         wall = 1 << 2,       //墙壁
         hang = 1 << 3,       //挂饰 (例如壁画之类的, 能挂在墙上的)
         furniture = 1 << 4,  //家具 (例如椅子，桌子,电视，床,水杯，台灯)
-        ceiling = 1 << 5     //天花板
+        ceiling = 1 << 5,     //天花板
+        chandelier = 1 << 6,  //吊灯
+        //wallPaper = 1<< 7,   //壁纸
     }
 
     //[Title("我是哪种类型")]
@@ -25,7 +27,7 @@ public class ModelCategory : MonoBehaviour
     //[Title("能被哪种类型  贴在自身上")]
     //[HideInInspector]
     public ECategory recognitionCategory;
-    
+
     void Awake()
     {
         //通过名字前缀来判断当前的模型是什么类型的。
@@ -52,6 +54,16 @@ public class ModelCategory : MonoBehaviour
         else if (name.Contains("ceiling_"))
         {
             selfCategory = ECategory.ceiling;
+            recognitionCategory = ECategory.chandelier;
+        }
+        else if(name.Contains("chandelier_"))
+        {
+            selfCategory = ECategory.chandelier;
+            recognitionCategory = ECategory.none;
+        }
+        else if (name.Contains("wallPaper_"))
+        {
+            selfCategory = ECategory.hang;
             recognitionCategory = ECategory.none;
         }
         else
