@@ -15,9 +15,4 @@ public class GlobalVariable
     {
         get { return _instance ?? (_instance = new GlobalVariable()); }
     }
-    
-    /// <summary>
-    /// 点击到的物体。(Player.cs 类中，点击物体时候，会记录在这里)
-    /// </summary>
-    public Transform TouchObject;
 }

@@ -28,6 +28,11 @@ public class RayEvent
     public event Action mouseLeftUpEvnet;
 
     /// <summary>
+    /// 上一次左键点击的物体
+    /// </summary>
+    public Transform previousClickObjectOfLeftButton;
+
+    /// <summary>
     /// 点击的物体(左键)，哪怕鼠标抬起也会一直记录，保留到下一次点击。(从鼠标点下到下一次点下，为一次生命周期)
     /// </summary>
     public Transform clickObjectOfLeftButton;
@@ -36,11 +41,6 @@ public class RayEvent
     /// 鼠标点下(左键)，记录到点击的物体，鼠标放开就清空，不会保留。(从鼠标点下到放开，为一次生命周期)
     /// </summary>
     public Transform rawObjectOfLeftButton;
-
-    // <summary>
-    /// 点击的物体的目标吸附物体(从鼠标点下到放开，为一次生命周期)
-    /// </summary>
-    public Transform clickObjectTargetObj;
 
     /// <summary>
     /// 鼠标左键是否按下(点击并拖拽场景中的物体)
@@ -65,6 +65,11 @@ public class RayEvent
     /// 鼠标抬起回调事件(右键)
     /// </summary>
     public event Action mouseRightUpEvnet;
+
+    /// <summary>
+    /// 上一次右键点击的物体
+    /// </summary>
+    public Transform previousClickObjectOfRightButton;
 
     /// <summary>
     /// 点击的物体(右键)，哪怕鼠标抬起也会一直记录，保留到下一次点击。
@@ -128,6 +133,9 @@ public class RayEvent
             Ray ray = Camera.main.ScreenPointToRay(mousePosition);
             RaycastHit hit;
 
+            //上一次点击的物体
+            previousClickObjectOfLeftButton = clickObjectOfLeftButton;
+
             if (Physics.Raycast(ray, out hit))
             {
                 //设置锚点的位置调整
@@ -142,7 +150,6 @@ public class RayEvent
             {
                 clickObjectOfLeftButton = null;
                 rawObjectOfLeftButton = null;
-                clickObjectTargetObj = null;
             }
 
             if (null != mouseLeftDownEvnet)
@@ -158,7 +165,6 @@ public class RayEvent
 
             isMouseLeftPress = false;
             rawObjectOfLeftButton = null;
-            clickObjectTargetObj = null;
         }
 
         //左键滑动
@@ -184,6 +190,9 @@ public class RayEvent
             Vector3 mousePosition = Input.mousePosition;
             Ray ray = Camera.main.ScreenPointToRay(mousePosition);
             RaycastHit hit;
+
+            //上一次点击的物体
+            previousClickObjectOfRightButton = clickObjectOfRightButton;
 
             if (Physics.Raycast(ray, out hit))
             {

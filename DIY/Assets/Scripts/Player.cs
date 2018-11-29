@@ -26,6 +26,8 @@ public class Player : MonoBehaviour
     /// </summary>
     private Vector3 _lastPosition = Vector3.zero;
 
+    private Transform _wall;
+
     private void Awake()
     {
         //添加需要用的功能.
@@ -60,10 +62,10 @@ public class Player : MonoBehaviour
 
     private void mouseLeftUp()
     {
-        if (null != RayEvent.Instance.clickObjectTargetObj)
+        if (null != _wall)
         {
             ModelCategory selectCategory = RayEvent.Instance.clickObjectOfLeftButton.GetComponentInParent<ModelCategory>();
-            ModelCategory targetObjCategory = RayEvent.Instance.clickObjectTargetObj.GetComponentInParent<ModelCategory>();
+            ModelCategory targetObjCategory = _wall.GetComponentInParent<ModelCategory>();
             //拖动的是墙纸，目标物体是墙
             if (selectCategory.selfCategory == targetObjCategory.recognitionCategory && selectCategory.name.Contains("wallPaper"))
             {
@@ -76,14 +78,16 @@ public class Player : MonoBehaviour
                 Destroy(destroyObj);
             }
         }
+
+        _wall = null;
     }
 
     /// <summary>
     /// 思路是，鼠标点下时候记录点中的物体A。发出射线，遍历所有被射线穿透的物体，与物体A比较，
     /// 看物体A能在谁上面移动。
     /// </summary>
-    /// <param name="mousePosition"></param>
-    /// <param name="hitInfoArray"></param>
+    /// <param name="mousePosition">射线在屏幕的位置</param>
+    /// <param name="hitInfoArray">射线在移动时候，射中的所有物体数组</param>
     private void mouseLeftDrag(Vector3 mousePosition, RaycastHit[] hitInfoArray)
     {
         Transform clickObjectOfLeftButton = RayEvent.Instance.clickObjectOfLeftButton;
@@ -105,8 +109,6 @@ public class Player : MonoBehaviour
                 ModelCategory hitCategory = hitTran.GetComponent<ModelCategory>();
                 ModelCategory selectCategory = clickObjectOfLeftButton.GetComponent<ModelCategory>();
 
-                Debug.Log(hitTran.name + "  self:" + hitCategory.selfCategory + "  other:" + hitCategory.recognitionCategory);
-
                 if ((hitCategory.recognitionCategory & selectCategory.selfCategory) > 0)
                 {
                     //如果是墙
@@ -114,7 +116,7 @@ public class Player : MonoBehaviour
                     {
                         clickObjectOfLeftButton.position = hitInfo.point;
                         clickObjectOfLeftButton.rotation = Quaternion.LookRotation(hitInfo.normal);
-                        RayEvent.Instance.clickObjectTargetObj = hitTran;
+                        _wall = hitTran;
                     }
                     //如果是天花板
                     else if ((hitCategory.selfCategory & ModelCategory.ECategory.ceiling) > 0)
