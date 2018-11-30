@@ -37,18 +37,24 @@ public class ResourceManager
     /// <param name="parent"></param>
     /// <param name="modelName"></param>
     /// <returns></returns>
-    public GameObject LoadModel(Transform parent, string modelName)
+    public ModelCategory LoadModel(Transform parent, string modelName)
     {
         GameObject obj = GameObject.Instantiate(Resources.Load("Model/" + modelName)) as GameObject;
 
-        GameObject tools = new GameObject("Tools");
-        tools.transform.SetParent(obj.transform);
-        tools.transform.localPosition = Vector3.zero;
-        tools.transform.localScale = Vector3.one;
-        tools.transform.localEulerAngles = Vector3.zero;
+        //Add tool node for model node
+        GameObject tool = new GameObject("Tools");
+        tool.transform.SetParent(obj.transform);
+        tool.transform.localPosition = Vector3.zero;
+        tool.transform.localScale = Vector3.one;
+        tool.transform.localEulerAngles = Vector3.zero;
 
+        //Attach script to model node
+        ModelCategory modelCategory = ModelCategory.AttachToModel(obj.transform);
+        modelCategory.toolNode = tool.transform;
+
+        //set parent
         obj.transform.parent = parent;
         obj.transform.localPosition = Vector3.zero;
-        return obj;
+        return modelCategory;
     }
 }

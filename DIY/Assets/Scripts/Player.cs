@@ -114,30 +114,11 @@ public class Player : MonoBehaviour
                     //如果是墙
                     if ((hitCategory.selfCategory & ModelCategory.ECategory.wall) > 0)
                     {
-                        clickObjectOfLeftButton.position = hitInfo.point;
-                        clickObjectOfLeftButton.rotation = Quaternion.LookRotation(hitInfo.normal);
                         _wall = hitTran;
                     }
-                    //如果是天花板
-                    else if ((hitCategory.selfCategory & ModelCategory.ECategory.ceiling) > 0)
-                    {
-                        clickObjectOfLeftButton.position = hitInfo.point;
-                        clickObjectOfLeftButton.rotation = Quaternion.LookRotation(hitInfo.normal);
-                    }
-                    else
-                    {
-                        //当前选中的物体，只能放在另一个物体的垂直位置上。也就是说，不能放在他的侧面。
-                        //比如，杯子能放在椅子上面，但是不能放在椅子周围的四个面上。
-                        if (hitInfo.normal.x > -0.1f && hitInfo.normal.x < 0.1f &&
-                           hitInfo.normal.y > 0.9f && hitInfo.normal.y < 1.1f &&
-                           hitInfo.normal.z > -0.1f && hitInfo.normal.z < 0.1f)
-                        {
-                            clickObjectOfLeftButton.position = hitInfo.point;
-                            clickObjectOfLeftButton.rotation = Quaternion.LookRotation(hitInfo.normal);
-                        }
-                    }
 
-                    Debug.Log("Player.Update() 射中点的法向量  " + hitInfo.normal.x + " " + hitInfo.normal.y + " " + hitInfo.normal.z);
+                    selectCategory.AfterRay(hitInfo);
+                    //Debug.Log("Player.Update() 射中点的法向量  " + hitInfo.normal.x + " " + hitInfo.normal.y + " " + hitInfo.normal.z);
                 }
             }
         }

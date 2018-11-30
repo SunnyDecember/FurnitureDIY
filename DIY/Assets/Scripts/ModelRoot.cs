@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /* Author:       Running
 ** Time:         18.11.18
@@ -8,13 +9,14 @@ using System.Collections;
 
 public class ModelRoot : MonoBehaviour
 {
+    private List<ModelCategory> _allModel = new List<ModelCategory>();
 
-    void Awake()
+    private void Awake()
     {
         EventCenter.Instance.RegisterEvent(EventName.CreateModel, CreateModel);
     }
-     
-    void Start ()
+
+    private void Start ()
     {
         
     }
@@ -23,14 +25,11 @@ public class ModelRoot : MonoBehaviour
     /// 创建模型作为自己的子节点。
     /// </summary>
     /// <param name="args"></param>
-    void CreateModel(params object[] args)
+    private void CreateModel(params object[] args)
     {
         string modelName = (string)args[0];
-        GameObject model = ResourceManager.Instance.LoadModel(transform, modelName);
-        if (null == model.GetComponent<ModelCategory>())
-        {
-            model.AddComponent<ModelCategory>();
-        }
+        ModelCategory model = ResourceManager.Instance.LoadModel(transform, modelName);
+        _allModel.Add(model);
     }
 
     private void OnDestroy()

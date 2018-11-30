@@ -82,11 +82,13 @@ public class DIYCanvas : MonoBehaviour
             Transform TouchObject = RayEvent.Instance.clickObjectOfLeftButton;
             if (null != TouchObject && TouchObject.GetComponent<ModelCategory>())
             {
-                bool canDelete = TouchObject.GetComponent<ModelCategory>().CanDelete();
+                ModelCategory modelCategory = TouchObject.GetComponent<ModelCategory>();
+                bool canDelete = modelCategory.CanDelete();
 
                 if (canDelete)
                 {
-                    Transform tools = TouchObject.Find("Tools");
+                    Transform tools = modelCategory.toolNode;
+
                     if (tools.childCount > 0)
                     {
                         Transform dragVectorTool = tools.Find("DragVector");

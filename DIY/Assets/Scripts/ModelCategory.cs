@@ -16,69 +16,79 @@ public class ModelCategory : MonoBehaviour
         hang = 1 << 3,       //挂饰 (例如壁画之类的, 能挂在墙上的)
         furniture = 1 << 4,  //家具 (例如椅子，桌子,电视，床,水杯，台灯)
         ceiling = 1 << 5,    //天花板
-        chandelier = 1 << 6  //吊灯
+        pendant = 1 << 6     //下锤物体
     }
 
     //[Title("我是哪种类型")]
-    //[HideInInspector]
     public ECategory selfCategory;
 
     //[Title("能被哪种类型  贴在自身上")]
-    //[HideInInspector]
     public ECategory recognitionCategory;
 
-    void Awake()
+    /// <summary>
+    /// It is own child tool node
+    /// </summary>
+    public Transform toolNode;
+
+    protected virtual void Awake()
     {
+
+    }
+
+    protected virtual void Start()
+    {
+
+    }
+
+    public static ModelCategory AttachToModel(Transform model)
+    {
+        ModelCategory modelCategory = null;
+
         //通过名字前缀来判断当前的模型是什么类型的。
-        if (name.Contains("floor_"))
+        if (model.name.Contains("floor_") && !model.GetComponent<FloorModel>())
         {
-            selfCategory = ECategory.floor;
-            recognitionCategory = ECategory.furniture;
+            modelCategory = model.gameObject.AddComponent<FloorModel>();
         }
-        else if (name.Contains("wall_"))
+        else if (model.name.Contains("wall_") && !model.GetComponent<WallModel>())
         {
-            selfCategory = ECategory.wall;
-            recognitionCategory = ECategory.hang;
+            modelCategory = model.gameObject.AddComponent<WallModel>();
         }
-        else if (name.Contains("hang_"))
+        else if (model.name.Contains("hang_") && !model.GetComponent<HangModel>())
         {
-            selfCategory = ECategory.hang;
-            recognitionCategory = ECategory.none;
+            modelCategory = model.gameObject.AddComponent<HangModel>();
         }
-        else if (name.Contains("furniture_"))
+        else if (model.name.Contains("furniture_") && !model.GetComponent<FurnitureModel>())
         {
-            selfCategory = ECategory.furniture;
-            recognitionCategory = ECategory.furniture;
+            modelCategory = model.gameObject.AddComponent<FurnitureModel>();
         }
-        else if (name.Contains("ceiling_"))
+        else if (model.name.Contains("ceiling_") && !model.GetComponent<CeilingModel>())
         {
-            selfCategory = ECategory.ceiling;
-            recognitionCategory = ECategory.chandelier;
+            modelCategory = model.gameObject.AddComponent<CeilingModel>();
         }
-        else if(name.Contains("chandelier_"))
+        else if (model.name.Contains("chandelier_") && !model.GetComponent<PendantModel>())
         {
-            selfCategory = ECategory.chandelier;
-            recognitionCategory = ECategory.none;
-        }
-        else if (name.Contains("wallPaper_"))
-        {
-            selfCategory = ECategory.hang;
-            recognitionCategory = ECategory.none;
+            modelCategory = model.gameObject.AddComponent<PendantModel>();
         }
         else
         {
-            selfCategory = ECategory.none;
-            recognitionCategory = ECategory.none;
+            Debug.LogError("ModelCategory.AttachToModel(): no modelCategory ! ! !");
         }
+        
+        return modelCategory;
     }
 
     /// <summary>
     /// 在场景中，是否能被移除。
     /// </summary>
     /// <returns></returns>
-    public bool CanDelete()
+    public virtual bool CanDelete()
     {
-        //目前只有挂饰,吊灯和家具能被删除的。
-        return (selfCategory & (ECategory.hang | ECategory.furniture | ECategory.chandelier)) > 0;
+        return false;
+    }
+
+    public virtual void AfterRay(RaycastHit hitInfo)
+    {
+        transform.position = hitInfo.point;
+        transform.rotation = Quaternion.LookRotation(hitInfo.normal);
     }
 }
