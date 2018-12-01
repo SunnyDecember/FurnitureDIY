@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
     private float _moveSpeed = 6f;
 
     /// <summary>
-    /// 右键在屏幕滑动时候，上一次的位置。（用来控制旋转）
+    /// 右键在屏幕滑动时候，上一次的位置。  （用来控制旋转）
     /// </summary>
     private Vector3 _lastPosition = Vector3.zero;
 
