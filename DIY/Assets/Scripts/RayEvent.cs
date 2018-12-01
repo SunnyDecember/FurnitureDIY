@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System;
 using UnityEngine.EventSystems;
+using zSpace.Core;
 
 /*
 ** Author      : Runing
@@ -120,11 +121,34 @@ public class RayEvent
         MouseRightButton();
     }
 
+    private enum StylusState
+    {
+        Idle = 0,
+        Grab = 1,
+    }
+
+    private static readonly float DEFAULT_STYLUS_BEAM_WIDTH = 0.0002f;
+    private static readonly float DEFAULT_STYLUS_BEAM_LENGTH = 0.3f;
+
+    private ZCore _core = null;
+    private bool _wasButtonPressed = false;
+
+    private GameObject _stylusBeamObject = null;
+    private LineRenderer _stylusBeamRenderer = null;
+    private float _stylusBeamLength = DEFAULT_STYLUS_BEAM_LENGTH;
+
+    private StylusState _stylusState = StylusState.Idle;
+    private GameObject _grabObject = null;
+    private Vector3 _initialGrabOffset = Vector3.zero;
+    private Quaternion _initialGrabRotation = Quaternion.identity;
+    private float _initialGrabDistance = 0.0f;
     /// <summary>
     /// Êó±ê×ó¼ü
     /// </summary>
     private void MouseLeftButton()
     {
+        ZCore.Pose pose = _core.GetTargetPose(ZCore.TargetType.Primary, ZCore.CoordinateSpace.World);
+        bool isButtonPressed = _core.IsTargetButtonPressed(ZCore.TargetType.Primary, 0);
         //×ó¼ü°´ÏÂ
         if (Input.GetMouseButtonDown(0))
         {

@@ -79,6 +79,7 @@ public class DIYCanvas : MonoBehaviour
         //删除模型
         _deleteModel.onClick.AddListener(()=> 
         {
+            //Transform TouchObject = GlobalVariable.Instance.TouchObject;
             Transform TouchObject = RayEvent.Instance.clickObjectOfLeftButton;
             if (null != TouchObject && TouchObject.GetComponent<ModelCategory>())
             {
