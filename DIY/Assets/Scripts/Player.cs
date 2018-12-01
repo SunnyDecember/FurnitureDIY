@@ -117,7 +117,7 @@ public class Player : MonoBehaviour
                         _wall = hitTran;
                     }
 
-                    selectCategory.AfterRay(hitInfo);
+                    selectCategory.AfterBeRay(hitInfo);
                     //Debug.Log("Player.Update() 射中点的法向量  " + hitInfo.normal.x + " " + hitInfo.normal.y + " " + hitInfo.normal.z);
                 }
             }

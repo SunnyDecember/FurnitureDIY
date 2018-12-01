@@ -18,6 +18,9 @@ public class DIYCanvas : MonoBehaviour
     private Button _environmentColorButton;
 
     [SerializeField]
+    private Button _house;
+
+    [SerializeField]
     private Button _paint;
 
     [SerializeField]
@@ -38,12 +41,23 @@ public class DIYCanvas : MonoBehaviour
     [SerializeField]
     private Button _loadWallPaper;
 
+    [SerializeField]
+    private Button _record;
+
+    [SerializeField]
+    private Button _recover;
+
     void Start ()
     {
         _environmentColorButton.onClick.AddListener(()=> 
         {
             GameObject colorPanel = ResourceManager.Instance.LoadUIPrefab(transform, "ColorPanel");
             colorPanel.transform.localScale = Vector3.one * 2;
+        });
+
+        _house.onClick.AddListener(() =>
+        {
+            EventCenter.Instance.PostEvent(EventName.CreateModel, "House");
         });
 
         _paint.onClick.AddListener(()=> 
@@ -74,6 +88,18 @@ public class DIYCanvas : MonoBehaviour
         _loadWallPaper.onClick.AddListener(() =>
         {
             EventCenter.Instance.PostEvent(EventName.CreateModel, "hang_wallPaper");
+        });
+
+        //record the scene model
+        _record.onClick.AddListener(() =>
+        {
+            EventCenter.Instance.PostEvent(EventName.RecordScene);
+        });
+
+        //recover the scene model
+        _recover.onClick.AddListener(() =>
+        {
+            EventCenter.Instance.PostEvent(EventName.RecoverScene);
         });
 
         //删除模型

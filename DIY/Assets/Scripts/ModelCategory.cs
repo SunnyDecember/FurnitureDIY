@@ -71,7 +71,7 @@ public class ModelCategory : MonoBehaviour
         }
         else
         {
-            Debug.LogError("ModelCategory.AttachToModel(): no modelCategory ! ! !");
+            Debug.Log("ModelCategory.AttachToModel(): no modelCategory ! ! !");
         }
         
         return modelCategory;
@@ -86,7 +86,11 @@ public class ModelCategory : MonoBehaviour
         return false;
     }
 
-    public virtual void AfterRay(RaycastHit hitInfo)
+    /// <summary>
+    /// After being hit by a ray
+    /// </summary>
+    /// <param name="hitInfo"></param>
+    public virtual void AfterBeRay(RaycastHit hitInfo)
     {
         transform.position = hitInfo.point;
         transform.rotation = Quaternion.LookRotation(hitInfo.normal);

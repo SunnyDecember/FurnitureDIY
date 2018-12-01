@@ -13,4 +13,14 @@ public class EventName
     /// 创建模型
     /// </summary>
     public static readonly string CreateModel = "CreateModel";
+
+    /// <summary>
+    /// record the scene
+    /// </summary>
+    public static readonly string RecordScene = "RecordScene";
+
+    /// <summary>
+    /// recover the scene
+    /// </summary>
+    public static readonly string RecoverScene = "RecoverScene";
 }

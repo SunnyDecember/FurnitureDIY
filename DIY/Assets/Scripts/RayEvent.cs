@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System;
 using UnityEngine.EventSystems;
-using zSpace.Core;
+//using zSpace.Core;
 
 /*
 ** Author      : Runing
@@ -130,7 +130,7 @@ public class RayEvent
     private static readonly float DEFAULT_STYLUS_BEAM_WIDTH = 0.0002f;
     private static readonly float DEFAULT_STYLUS_BEAM_LENGTH = 0.3f;
 
-    private ZCore _core = null;
+    //private ZCore _core = null;
     private bool _wasButtonPressed = false;
 
     private GameObject _stylusBeamObject = null;
@@ -147,8 +147,8 @@ public class RayEvent
     /// </summary>
     private void MouseLeftButton()
     {
-        ZCore.Pose pose = _core.GetTargetPose(ZCore.TargetType.Primary, ZCore.CoordinateSpace.World);
-        bool isButtonPressed = _core.IsTargetButtonPressed(ZCore.TargetType.Primary, 0);
+        //ZCore.Pose pose = _core.GetTargetPose(ZCore.TargetType.Primary, ZCore.CoordinateSpace.World);
+        //bool isButtonPressed = _core.IsTargetButtonPressed(ZCore.TargetType.Primary, 0);
         //×ó¼ü°´ÏÂ
         if (Input.GetMouseButtonDown(0))
         {

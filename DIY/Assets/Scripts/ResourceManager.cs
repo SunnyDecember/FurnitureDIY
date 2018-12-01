@@ -37,24 +37,36 @@ public class ResourceManager
     /// <param name="parent"></param>
     /// <param name="modelName"></param>
     /// <returns></returns>
-    public ModelCategory LoadModel(Transform parent, string modelName)
+    public Transform LoadModel(Transform parent, string modelName)
     {
-        GameObject obj = GameObject.Instantiate(Resources.Load("Model/" + modelName)) as GameObject;
+        Object originObj = Resources.Load("Model/" + modelName);
+        if (null == originObj)
+        {
+            Debug.LogError("ResourceManager.LoadModel(): " + modelName + " is null");
+            return null;
+        } 
 
-        //Add tool node for model node
-        GameObject tool = new GameObject("Tools");
-        tool.transform.SetParent(obj.transform);
-        tool.transform.localPosition = Vector3.zero;
-        tool.transform.localScale = Vector3.one;
-        tool.transform.localEulerAngles = Vector3.zero;
+        GameObject obj = GameObject.Instantiate(originObj) as GameObject;
 
         //Attach script to model node
         ModelCategory modelCategory = ModelCategory.AttachToModel(obj.transform);
-        modelCategory.toolNode = tool.transform;
+
+        if (null != modelCategory)
+        {
+            //Add tool node for model node
+            GameObject tool = new GameObject("Tools");
+            tool.transform.SetParent(obj.transform);
+            tool.transform.localPosition = Vector3.zero;
+            tool.transform.localScale = Vector3.one;
+            tool.transform.localEulerAngles = Vector3.zero;
+
+            modelCategory.toolNode = tool.transform;
+        }
 
         //set parent
         obj.transform.parent = parent;
         obj.transform.localPosition = Vector3.zero;
-        return modelCategory;
+
+        return obj.transform;
     }
 }
