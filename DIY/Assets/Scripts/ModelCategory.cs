@@ -90,9 +90,10 @@ public class ModelCategory : MonoBehaviour
     /// After being hit by a ray
     /// </summary>
     /// <param name="hitInfo"></param>
-    public virtual void AfterBeRay(RaycastHit hitInfo)
+    public virtual bool AfterBeRay(RaycastHit hitInfo)
     {
         transform.position = hitInfo.point;
         transform.rotation = Quaternion.LookRotation(hitInfo.normal);
+        return true;
     }
 }

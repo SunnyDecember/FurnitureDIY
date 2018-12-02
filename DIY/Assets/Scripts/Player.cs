@@ -104,7 +104,8 @@ public class Player : MonoBehaviour
                 continue;
 
             //射中的物体带有ModelCategory脚本。
-            if (null != hitTran.GetComponent<ModelCategory>() && hitTran.tag != "AxisMove")
+            //if (null != hitTran.GetComponent<ModelCategory>() && hitTran.tag != "AxisMove")
+            if (null != hitTran.GetComponent<ModelCategory>())
             {
                 ModelCategory hitCategory = hitTran.GetComponent<ModelCategory>();
                 ModelCategory selectCategory = clickObjectOfLeftButton.GetComponent<ModelCategory>();
@@ -117,8 +118,8 @@ public class Player : MonoBehaviour
                         _wall = hitTran;
                     }
 
-                    selectCategory.AfterBeRay(hitInfo);
-                    //Debug.Log("Player.Update() 射中点的法向量  " + hitInfo.normal.x + " " + hitInfo.normal.y + " " + hitInfo.normal.z);
+                    if(selectCategory.AfterBeRay(hitInfo))
+                        break;
                 }
             }
         }

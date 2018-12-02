@@ -16,7 +16,7 @@ public class FurnitureModel : ModelCategory
         recognitionCategory = ECategory.furniture;
     }
 
-    public override void AfterBeRay(RaycastHit hitInfo)
+    public override bool AfterBeRay(RaycastHit hitInfo)
     {
         //当前选中的物体，只能放在另一个物体的垂直位置上。也就是说，不能放在他的侧面。
         //比如，杯子能放在椅子上面，但是不能放在椅子周围的四个面上。
@@ -26,7 +26,9 @@ public class FurnitureModel : ModelCategory
         {
             transform.position = hitInfo.point;
             transform.rotation = Quaternion.LookRotation(hitInfo.normal);
+            return true;
         }
+        return false;
     }
 
     public override bool CanDelete()

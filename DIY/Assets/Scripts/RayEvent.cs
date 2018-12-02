@@ -121,27 +121,6 @@ public class RayEvent
         MouseRightButton();
     }
 
-    private enum StylusState
-    {
-        Idle = 0,
-        Grab = 1,
-    }
-
-    private static readonly float DEFAULT_STYLUS_BEAM_WIDTH = 0.0002f;
-    private static readonly float DEFAULT_STYLUS_BEAM_LENGTH = 0.3f;
-
-    //private ZCore _core = null;
-    private bool _wasButtonPressed = false;
-
-    private GameObject _stylusBeamObject = null;
-    private LineRenderer _stylusBeamRenderer = null;
-    private float _stylusBeamLength = DEFAULT_STYLUS_BEAM_LENGTH;
-
-    private StylusState _stylusState = StylusState.Idle;
-    private GameObject _grabObject = null;
-    private Vector3 _initialGrabOffset = Vector3.zero;
-    private Quaternion _initialGrabRotation = Quaternion.identity;
-    private float _initialGrabDistance = 0.0f;
     /// <summary>
     /// 鼠标左键
     /// </summary>
@@ -163,12 +142,14 @@ public class RayEvent
             if (Physics.Raycast(ray, out hit))
             {
                 //设置锚点的位置调整
-                ModelCategory modelCategory = hit.transform.GetComponentInParent<ModelCategory>();
-                if (modelCategory)
-                {
-                    clickObjectOfLeftButton = modelCategory.transform;
-                    rawObjectOfLeftButton = modelCategory.transform;
-                }
+                //ModelCategory modelCategory = hit.transform.GetComponentInParent<ModelCategory>();
+                //if (modelCategory)
+                //{
+                //    clickObjectOfLeftButton = modelCategory.transform;
+                //    rawObjectOfLeftButton = modelCategory.transform;
+                //}
+                clickObjectOfLeftButton = hit.transform;
+                rawObjectOfLeftButton = hit.transform;
             }
             else
             {

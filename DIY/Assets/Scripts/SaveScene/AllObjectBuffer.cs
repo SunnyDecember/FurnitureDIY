@@ -134,30 +134,10 @@ public class AllObjectBuffer
 
         foreach (var kv in transformBufferDictionary)
         {
-            string bufferModelNameEX = kv.Key;
-            string bufferModelName = bufferModelNameEX;
 
-            //todo 待改进, 用正则表达式
-            for (int i = 0; i < 20; i++)
-            {
-                string ex = "_" + i;
-                if (bufferModelName.Contains(ex))
-                    bufferModelName = bufferModelName.Replace(ex, "");
-            }
-
-            //load model
-            Transform model = ResourceManager.Instance.LoadModel(modelRoot, bufferModelName);
+            Transform model = LoadModel(kv.Key, modelRoot);
             modelList.Add(model);
-            model.name = bufferModelNameEX;
-            Transform[] childArray = model.gameObject.GetComponentsInChildren<Transform>(true);
-            Dictionary<string, Transform> childDictionary = new Dictionary<string, Transform>();
-
-            //Array is converted to Dictionary.
-            for (int i = 0; i < childArray.Length; i++)
-            {
-                Transform child = childArray[i];
-                childDictionary.Add(child.name, child);
-            }
+            Dictionary<string, Transform> childrenDictionary = GetModelChildren(model);
 
             //circulating buffer child.
             List<OneNodeTransform> bufferChildList = kv.Value;
@@ -165,9 +145,9 @@ public class AllObjectBuffer
             {
                 OneNodeTransform bufferChild = bufferChildList[i];
 
-                if (childDictionary.ContainsKey(bufferChild.name))
+                if (childrenDictionary.ContainsKey(bufferChild.name))
                 {
-                    Transform child = childDictionary[bufferChild.name];
+                    Transform child = childrenDictionary[bufferChild.name];
                     child.name = bufferChild.name;
                     child.position = ToVector3(bufferChild.position);
                     child.rotation = ToQuaterion(bufferChild.quaterion);
@@ -179,10 +159,46 @@ public class AllObjectBuffer
                     //当前模型节点不在缓存模型节点中，说明当前模型有东西没有加载进来。
                     //加载模型
                     //递归
+                    //Transform model = LoadModel(kv.Key, modelRoot);
+                    //modelList.Add(model);
+                    //Dictionary<string, Transform> childrenDictionary = GetModelChildren(model);
                 }
             }
         }
 
         return modelList;
+    }
+
+    private Transform LoadModel(string bufferModelNameEX, Transform parent)
+    {
+        string bufferModelName = bufferModelNameEX;
+
+        //todo 待改进, 用正则表达式
+        for (int i = 0; i < 20; i++)
+        {
+            string ex = "_" + i;
+            if (bufferModelName.Contains(ex))
+                bufferModelName = bufferModelName.Replace(ex, "");
+        }
+
+        //load model
+        Transform model = ResourceManager.Instance.LoadModel(parent, bufferModelName);
+        model.name = bufferModelNameEX;
+        return model;
+    }
+
+    private Dictionary<string, Transform> GetModelChildren(Transform model)
+    {
+        Transform[] childArray = model.gameObject.GetComponentsInChildren<Transform>(true);
+        Dictionary<string, Transform> childDictionary = new Dictionary<string, Transform>();
+
+        //Array is converted to Dictionary.
+        for (int i = 0; i < childArray.Length; i++)
+        {
+            Transform child = childArray[i];
+            childDictionary.Add(child.name, child);
+        }
+
+        return childDictionary;
     }
 }
