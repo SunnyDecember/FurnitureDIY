@@ -75,7 +75,9 @@ public class Player : MonoBehaviour
                 //给RayEvent.Instance.clickObjectOfLeftButton = null，防止后续操作的空引用
                 GameObject destroyObj = RayEvent.Instance.clickObjectOfLeftButton.gameObject;
                 RayEvent.Instance.clickObjectOfLeftButton = null;
-                Destroy(destroyObj);
+
+                //Destroy(destroyObj);
+                EventCenter.Instance.PostEvent(EventName.DeleteModel, destroyObj);
             }
         }
 

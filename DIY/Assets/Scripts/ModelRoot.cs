@@ -16,6 +16,7 @@ public class ModelRoot : MonoBehaviour
     private void Awake()
     {
         EventCenter.Instance.RegisterEvent(EventName.CreateModel, CreateModel);
+        EventCenter.Instance.RegisterEvent(EventName.DeleteModel, DeleteModel);
         EventCenter.Instance.RegisterEvent(EventName.RecordScene, RecordScene);
         EventCenter.Instance.RegisterEvent(EventName.RecoverScene, RecoverScene);
     }
@@ -35,6 +36,27 @@ public class ModelRoot : MonoBehaviour
         Transform model = ResourceManager.Instance.LoadModel(transform, modelName);
         model.name = modelName + "_" + _modelIndex++;
         _allModel.Add(model);
+    }
+
+    private void DeleteModel(params object[] args)
+    {
+        Transform model = null;
+
+        if (args[0] is GameObject)
+        {
+            model = (args[0] as GameObject).transform;
+        }
+        else
+        {
+            model = args[0] as Transform;
+        }
+        
+        if (_allModel.Contains(model))
+        {
+            _allModel.Remove(model);
+        }
+
+        Destroy(model.gameObject);
     }
 
     /// <summary>
@@ -58,6 +80,7 @@ public class ModelRoot : MonoBehaviour
     private void OnDestroy()
     {
         EventCenter.Instance.UnRegisterEvent(EventName.CreateModel, CreateModel);
+        EventCenter.Instance.UnRegisterEvent(EventName.DeleteModel, DeleteModel);
         EventCenter.Instance.UnRegisterEvent(EventName.RecordScene, RecordScene);
         EventCenter.Instance.UnRegisterEvent(EventName.RecoverScene, RecoverScene);
     }

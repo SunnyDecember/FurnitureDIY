@@ -15,6 +15,11 @@ public class EventName
     public static readonly string CreateModel = "CreateModel";
 
     /// <summary>
+    /// Delete the Model
+    /// </summary>
+    public static readonly string DeleteModel = "DeleteModel";
+
+    /// <summary>
     /// record the scene
     /// </summary>
     public static readonly string RecordScene = "RecordScene";
