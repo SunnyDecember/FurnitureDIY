@@ -9,6 +9,7 @@ using System.Collections;
 public class ResourceManager
 {
     private static ResourceManager _instance = null;
+
     public static ResourceManager Instance
     {
         get
@@ -68,5 +69,18 @@ public class ResourceManager
         obj.transform.localPosition = Vector3.zero;
 
         return obj.transform;
+    }
+
+    /// <summary>
+    /// 加载贴图
+    /// </summary>
+    /// <param name="textureName"></param>
+    /// <returns></returns>
+    public Texture LoadTexture(string textureName)
+    {
+        Texture texture = null;
+        texture = Resources.Load<Texture>("Texture/" + textureName);
+
+        return texture;
     }
 }

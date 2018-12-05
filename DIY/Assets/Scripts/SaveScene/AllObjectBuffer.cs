@@ -24,6 +24,7 @@ public class AllObjectBuffer
         public string quaterion;
         public string localScale;
         public bool isShow;
+        public string textureName;
     }
 
     /// <summary>
@@ -33,7 +34,7 @@ public class AllObjectBuffer
     /// <returns></returns>
     private Vector3 ToVector3(string str)
     {
-        String[] strArray = str.Split(new char[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
+        String[] strArray = str.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
 
         if (strArray.Length != 3)
             Debug.LogError("AllObjectBuffer.ToVector3(): strArray count is not 3");
@@ -60,9 +61,9 @@ public class AllObjectBuffer
     {
         String[] strArray = str.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
 
-        if(strArray.Length != 4)
+        if (strArray.Length != 4)
             Debug.LogError("AllObjectBuffer.ToQuaterion(): strArray count is not 4");
-        
+
         return new Quaternion(Convert.ToSingle(strArray[0]), Convert.ToSingle(strArray[1]), Convert.ToSingle(strArray[2]), Convert.ToSingle(strArray[3]));
     }
 
@@ -110,6 +111,16 @@ public class AllObjectBuffer
                 oneNodeTransform.localScale = FromVector3(child.localScale);
                 oneNodeTransform.isShow = child.gameObject.activeSelf;
 
+                //获取纹理名字并保存到缓存中。
+                MeshRenderer mesh = child.GetComponent<MeshRenderer>();
+                string textureName = "";
+
+                if (null != mesh && null != mesh.material && null != mesh.material.mainTexture)
+                {
+                    textureName = mesh.material.mainTexture.name;
+                }
+
+                oneNodeTransform.textureName = textureName;
                 transformBufferDictionary[model.name].Add(oneNodeTransform);
 
                 //Check if the node name is repeated.
@@ -132,43 +143,34 @@ public class AllObjectBuffer
     {
         List<Transform> modelList = new List<Transform>();
 
+        //遍历缓存中所有模型
         foreach (var kv in transformBufferDictionary)
         {
-
+            //加载最新模型到场景中，并获取他的所有子节点。
             Transform model = LoadModel(kv.Key, modelRoot);
             modelList.Add(model);
             Dictionary<string, Transform> childrenDictionary = GetModelChildren(model);
 
             //circulating buffer child.
+            //遍历一个缓存模型的所有子节点
             List<OneNodeTransform> bufferChildList = kv.Value;
             for (int i = 0; i < bufferChildList.Count; i++)
             {
+                //用缓存模型的节点设置给最新模型节点,达到恢复场景的目的。
                 OneNodeTransform bufferChild = bufferChildList[i];
-
-                if (childrenDictionary.ContainsKey(bufferChild.name))
-                {
-                    Transform child = childrenDictionary[bufferChild.name];
-                    child.name = bufferChild.name;
-                    child.position = ToVector3(bufferChild.position);
-                    child.rotation = ToQuaterion(bufferChild.quaterion);
-                    child.localScale = ToVector3(bufferChild.localScale);
-                    child.gameObject.SetActive(bufferChild.isShow);
-                }
-                else
-                {
-                    //当前模型节点不在缓存模型节点中，说明当前模型有东西没有加载进来。
-                    //加载模型
-                    //递归
-                    //Transform model = LoadModel(kv.Key, modelRoot);
-                    //modelList.Add(model);
-                    //Dictionary<string, Transform> childrenDictionary = GetModelChildren(model);
-                }
+                RecoverOneNode(childrenDictionary, bufferChild);
             }
         }
 
         return modelList;
     }
 
+    /// <summary>
+    /// 从本地加载模型
+    /// </summary>
+    /// <param name="bufferModelNameEX">EX 为带后缀名</param>
+    /// <param name="parent"></param>
+    /// <returns></returns>
     private Transform LoadModel(string bufferModelNameEX, Transform parent)
     {
         string bufferModelName = bufferModelNameEX;
@@ -187,6 +189,11 @@ public class AllObjectBuffer
         return model;
     }
 
+    /// <summary>
+    /// 获取一个模型下所有的节点
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns>key为节点名字，value为节点Transform</returns>
     private Dictionary<string, Transform> GetModelChildren(Transform model)
     {
         Transform[] childArray = model.gameObject.GetComponentsInChildren<Transform>(true);
@@ -200,5 +207,46 @@ public class AllObjectBuffer
         }
 
         return childDictionary;
+    }
+
+    /// <summary>
+    /// 恢复一个节点
+    /// </summary>
+    /// <param name="childrenDictionary">当前一个模型所有的节点</param>
+    /// <param name="bufferChild">缓存模型中的一个节点</param>
+    private void RecoverOneNode(Dictionary<string, Transform> childrenDictionary, OneNodeTransform bufferChild)
+    {
+        if (childrenDictionary.ContainsKey(bufferChild.name))
+        {
+            Transform child = childrenDictionary[bufferChild.name];
+            child.name = bufferChild.name;
+            child.position = ToVector3(bufferChild.position);
+            child.rotation = ToQuaterion(bufferChild.quaterion);
+            child.localScale = ToVector3(bufferChild.localScale);
+            child.gameObject.SetActive(bufferChild.isShow);
+
+            //加载纹理
+            MeshRenderer mesh = child.GetComponent<MeshRenderer>();
+            if (!string.IsNullOrEmpty(bufferChild.textureName) && null != mesh)
+            {
+                Texture texture = ResourceManager.Instance.LoadTexture(bufferChild.textureName);
+
+                //如果在Resources下找不到纹理，就不要管了。
+                //很可能这个纹理没有被替换过的，那么就不要去更新它，保持默认的纹理就行。
+                if (null != texture)
+                {
+                    mesh.material.mainTexture = texture;
+                }
+            }
+        }
+        else
+        {
+            //当前模型节点不在缓存模型节点中，说明当前模型有东西没有加载进来。
+            //加载模型
+            //递归
+            //Transform model = LoadModel(kv.Key, modelRoot);
+            //modelList.Add(model);
+            //Dictionary<string, Transform> childrenDictionary = GetModelChildren(model);
+        }
     }
 }
