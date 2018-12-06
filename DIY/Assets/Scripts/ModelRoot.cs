@@ -65,7 +65,7 @@ public class ModelRoot : MonoBehaviour
     /// <param name="args"></param>
     private void RecordScene(params object[] args)
     {
-        SceneBuffer.Instance.Record("SceneName", _allModel);
+        SceneBuffer.Instance.RecordModel("SceneName", _allModel);
     }
 
     /// <summary>

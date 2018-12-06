@@ -17,6 +17,11 @@ public class AllObjectBuffer
     /// </summary>
     public Dictionary<string, List<OneNodeTransform>> transformBufferDictionary = new Dictionary<string, List<OneNodeTransform>>();
 
+    /// <summary>
+    /// It's color of Current Scene
+    /// </summary>
+    public String environmentColor = "";
+
     public struct OneNodeTransform
     {
         public string name;
@@ -27,6 +32,7 @@ public class AllObjectBuffer
         public string textureName;
     }
 
+    #region 转换函数
     /// <summary>
     /// String is converted to Vector3
     /// </summary>
@@ -78,9 +84,38 @@ public class AllObjectBuffer
     }
 
     /// <summary>
+    /// string is converted to color
+    /// </summary>
+    /// <param name="str"></param>
+    /// <returns></returns>
+    private Color ToColor(string str)
+    {
+        String[] strArray = str.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+
+        if (strArray.Length != 4)
+            Debug.LogError("AllObjectBuffer.ToQuaterion(): strArray count is not 4");
+
+        return new Color(Convert.ToSingle(strArray[0]), Convert.ToSingle(strArray[1]), Convert.ToSingle(strArray[2]), Convert.ToSingle(strArray[3]));
+    }
+
+    /// <summary>
+    /// Color is converted to string
+    /// </summary>
+    /// <param name="quaterion"></param>
+    /// <returns></returns>
+    private string FromColor(Color color)
+    {
+        return color.r + "|" + color.g + "|" + color.b + "|" + color.a;
+    }
+
+    #endregion
+
+    #region 记录场景
+
+    /// <summary>
     /// Objects that need to be record
     /// </summary>
-    public void Record(List<Transform> objectList)
+    public void RecordModel(List<Transform> objectList)
     {
         List<string> nodeNameList = new List<string>();
         transformBufferDictionary.Clear();
@@ -136,11 +171,24 @@ public class AllObjectBuffer
         }
     }
 
+    public void RecordEnvironmentColor(Color color)
+    {
+        environmentColor = FromColor(color);
+    }
+
+    #endregion
+
+    #region 恢复场景
+
     /// <summary>
     /// Recover those objects that have been recorded
     /// </summary>
     public List<Transform> Recover(Transform modelRoot)
     {
+        // Recover Color of scene 
+        if(!string.IsNullOrEmpty(environmentColor))
+            RenderSettings.ambientLight = ToColor(environmentColor);
+
         List<Transform> modelList = new List<Transform>();
 
         //遍历缓存中所有模型
@@ -249,4 +297,5 @@ public class AllObjectBuffer
             //Dictionary<string, Transform> childrenDictionary = GetModelChildren(model);
         }
     }
+    #endregion
 }

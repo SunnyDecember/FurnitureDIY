@@ -24,14 +24,10 @@ public class SceneBuffer
     /// <summary>
     /// Objects that need to be record
     /// </summary>
-    public void Record(string sceneName, List<Transform> objectList)
+    public void RecordModel(string sceneName, List<Transform> objectList)
     {
-        AllObjectBuffer objectBuffer = new AllObjectBuffer();
-        objectBuffer.Record(objectList);
-
-        if (_allObjectBufferDictionary.ContainsKey(sceneName))
-            _allObjectBufferDictionary.Remove(sceneName);
-        _allObjectBufferDictionary.Add(sceneName, objectBuffer);
+        AllObjectBuffer objectBuffer = GetAllObjectBuffer(sceneName);
+        objectBuffer.RecordModel(objectList);
         
         //Save to local
         string jsonPath = Path.Combine(Application.dataPath, sceneName + ".runing").Replace("\\", "/");
@@ -44,6 +40,32 @@ public class SceneBuffer
         streamWriter.Flush();
         streamWriter.Close();
         fileStream.Close();
+    }
+
+    /// <summary>
+    /// Record  the environment color of scene
+    /// </summary>
+    /// <param name="color"></param>
+    public void RecordEnvironmentColor(string sceneName, Color color)
+    {
+        AllObjectBuffer objectBuffer = GetAllObjectBuffer(sceneName);
+        objectBuffer.RecordEnvironmentColor(color);
+    }
+
+    public AllObjectBuffer GetAllObjectBuffer(string sceneName)
+    {
+        AllObjectBuffer objectBuffer = null;
+        if (!_allObjectBufferDictionary.ContainsKey(sceneName))
+        {
+            objectBuffer = new AllObjectBuffer();
+            _allObjectBufferDictionary.Add(sceneName, objectBuffer);
+        }
+        else
+        {
+            objectBuffer = _allObjectBufferDictionary[sceneName];
+        }
+
+        return objectBuffer;
     }
 
     /// <summary>

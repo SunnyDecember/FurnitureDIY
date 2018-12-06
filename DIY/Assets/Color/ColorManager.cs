@@ -29,6 +29,7 @@ public class ColorManager : MonoBehaviour, IDragHandler
         colorShow.color = getColor;
         
         RenderSettings.ambientLight = getColor;
+        SceneBuffer.Instance.RecordEnvironmentColor("SceneName", getColor);
     }
     
     // Use this for initialization
