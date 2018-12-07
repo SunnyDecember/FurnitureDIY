@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.Text.RegularExpressions;
 
 /*
 ** Author      : Runing
@@ -221,15 +222,9 @@ public class AllObjectBuffer
     /// <returns></returns>
     private Transform LoadModel(string bufferModelNameEX, Transform parent)
     {
-        string bufferModelName = bufferModelNameEX;
-
-        //todo 待改进, 用正则表达式
-        for (int i = 0; i < 20; i++)
-        {
-            string ex = "_" + i;
-            if (bufferModelName.Contains(ex))
-                bufferModelName = bufferModelName.Replace(ex, "");
-        }
+        string ex = Regex.Match(bufferModelNameEX, @"_\d+\Z").ToString();
+        string bufferModelName = bufferModelNameEX.Replace(ex, "");
+        Debug.Log(ex);
 
         //load model
         Transform model = ResourceManager.Instance.LoadModel(parent, bufferModelName);
