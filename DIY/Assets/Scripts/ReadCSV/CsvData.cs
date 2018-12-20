@@ -46,5 +46,22 @@ public class CsvData : MonoBehaviour
             return null;
         }
     }
+
+    /// <summary>
+    /// 通过目录分类和文件名字查找物体
+    /// </summary>
+    /// <param name="categoryName"></param>
+    /// <param name="modelName"></param>
+    /// <returns></returns>
+    public string GetModelImagePath(string categoryName, string modelName)
+    {
+        List<ModelInfo> modelInfos = GetCategoryModels(categoryName);
+        foreach (ModelInfo item in modelInfos)
+        {
+            if (item.Name == modelName)
+                return item.ImageLocalPos;
+        }
+        return null;
+    }
 }
 

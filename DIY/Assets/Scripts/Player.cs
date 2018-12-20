@@ -54,9 +54,10 @@ public class Player : MonoBehaviour
 
     private void mouseLeftDown(Vector3 mousePosition, RaycastHit hit)
     {
-        if (null != hit.transform)
+        //说明要生成点击的物体
+        if (null != hit.transform && RayEvent.Instance.isReadyInstanceObj)
         {
-
+            EventCenter.Instance.PostEvent(EventName.CreateModel, "House");
         }
     }
 

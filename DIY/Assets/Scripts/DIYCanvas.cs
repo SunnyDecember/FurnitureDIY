@@ -62,7 +62,11 @@ public class DIYCanvas : MonoBehaviour
 
         _paint.onClick.AddListener(()=> 
         {
-            EventCenter.Instance.PostEvent(EventName.CreateModel, "hang_paint");
+            //EventCenter.Instance.PostEvent(EventName.CreateModel, "hang_paint");
+            ModelInfoData modelInfoData = _paint.GetComponent<ModelInfoData>();
+            string[] info = new string[4] { modelInfoData.Category, modelInfoData.name, modelInfoData.ImageLocalPos, modelInfoData.ModelLocalPos };
+            EventCenter.Instance.PostEvent(EventName.CreateTempObj, "TempObj", info);
+
         });
 
         _chair.onClick.AddListener(() =>
@@ -128,5 +132,7 @@ public class DIYCanvas : MonoBehaviour
                 }
             }
         });
+
+        //首先点击了就可以知道图片和模型名字了跟路径信息了，传到生产的物体里，然后直接判断点击的地方是否满足
     }
 }

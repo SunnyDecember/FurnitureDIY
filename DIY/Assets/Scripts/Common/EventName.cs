@@ -28,4 +28,10 @@ public class EventName
     /// recover the scene
     /// </summary>
     public static readonly string RecoverScene = "RecoverScene";
+
+    /// <summary>
+    /// CreateTempObj
+    /// </summary>
+    public static readonly string CreateTempObj = "CreateTempObj";
+
 }

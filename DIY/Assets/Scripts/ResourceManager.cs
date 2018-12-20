@@ -48,7 +48,7 @@ public class ResourceManager
         } 
 
         GameObject obj = GameObject.Instantiate(originObj) as GameObject;
-
+        RayEvent.Instance.tempInstanceObj = obj;
         //Attach script to model node
         ModelCategory modelCategory = ModelCategory.AttachToModel(obj.transform);
 

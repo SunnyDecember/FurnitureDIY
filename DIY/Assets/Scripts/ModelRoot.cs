@@ -19,11 +19,17 @@ public class ModelRoot : MonoBehaviour
         EventCenter.Instance.RegisterEvent(EventName.DeleteModel, DeleteModel);
         EventCenter.Instance.RegisterEvent(EventName.RecordScene, RecordScene);
         EventCenter.Instance.RegisterEvent(EventName.RecoverScene, RecoverScene);
+        EventCenter.Instance.RegisterEvent(EventName.CreateTempObj, CreateTempObj);
     }
 
     private void Start ()
     {
         
+    }
+
+    void CreateTempObj(params object[] args)
+    {
+
     }
 
     /// <summary>
@@ -83,5 +89,6 @@ public class ModelRoot : MonoBehaviour
         EventCenter.Instance.UnRegisterEvent(EventName.DeleteModel, DeleteModel);
         EventCenter.Instance.UnRegisterEvent(EventName.RecordScene, RecordScene);
         EventCenter.Instance.UnRegisterEvent(EventName.RecoverScene, RecoverScene);
+        EventCenter.Instance.UnRegisterEvent(EventName.CreateTempObj, CreateTempObj);
     }
 }
