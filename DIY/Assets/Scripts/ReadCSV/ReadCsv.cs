@@ -14,7 +14,8 @@ public struct ModelInfo
 
 public class ReadCsv
 {
-    private static string excelPath = "F:/WorkProject/PlayAnimation/Assets/Resources/Data/模型数据.xls";
+    //private static string excelPath = "F:/WorkProject/PlayAnimation/Assets/Resources/Data/模型数据.xls";
+    private static string excelPath = Application.streamingAssetsPath + "/模型数据.xls";
     //public List<ModelInfo> ModelsInfo;
     //void Start()
     //{
@@ -29,7 +30,7 @@ public class ReadCsv
     //        }
     //    }
     //}
-    
+
 
     static DataSet ReadExcel()
     {
