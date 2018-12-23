@@ -30,6 +30,8 @@ public class ModelCategory : MonoBehaviour
     /// </summary>
     public Transform toolNode;
 
+    private int _timeID = -1;
+
     protected virtual void Awake()
     {
 
@@ -93,7 +95,60 @@ public class ModelCategory : MonoBehaviour
     public virtual bool AfterBeRay(RaycastHit hitInfo)
     {
         transform.position = hitInfo.point;
-        transform.rotation = Quaternion.LookRotation(hitInfo.normal);
+        RotateToNormal(hitInfo.normal);
         return true;
+    }
+
+    /// <summary>
+    /// 旋转到和法向量一致的方向
+    /// </summary>
+    /// <param name="normal"></param>
+    protected void RotateToNormal(Vector3 normal)
+    {
+        //如果当前Z轴与法向量的夹角很接近，就不要去旋转了。
+        //否则如果之前已经被左右按钮旋转过，这里再旋转就会还原角度了。
+        float angle = Vector3.Angle(transform.forward, normal);
+        if (angle > 5f)
+        {
+            transform.rotation = Quaternion.LookRotation(normal);
+        }
+    }
+
+    /// <summary>
+    /// 右旋转
+    /// </summary>
+    public virtual void RightRotation(bool pointDown)
+    {
+        RotateSelf(pointDown, 3);
+    }
+
+    /// <summary>
+    /// 左旋转
+    /// </summary>
+    public virtual void LeftRotation(bool pointDown)
+    {
+        RotateSelf(pointDown, -3);
+    }
+
+    private void RotateSelf(bool pointDown, float angle)
+    {
+        if (pointDown)
+        {
+            Timer.Add(-1, (timeID, args) =>
+            {
+                _timeID = timeID;
+
+                //不停旋转自身
+                transform.Rotate(new Vector3(0, 0, 1), angle);
+            });
+        }
+        else
+        {
+            if (_timeID > 0)
+            {
+                Timer.Delete(_timeID);
+                _timeID = -1;
+            }
+        }
     }
 }

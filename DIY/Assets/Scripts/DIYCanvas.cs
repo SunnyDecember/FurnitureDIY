@@ -47,6 +47,12 @@ public class DIYCanvas : MonoBehaviour
     [SerializeField]
     private Button _recover;
 
+    [SerializeField]
+    private Button _rightRotation;
+
+    [SerializeField]
+    private Button _leftRotation;
+
     void Start ()
     {
         _environmentColorButton.onClick.AddListener(()=> 
@@ -106,6 +112,46 @@ public class DIYCanvas : MonoBehaviour
             EventCenter.Instance.PostEvent(EventName.RecoverScene);
         });
 
+        //右旋转按下
+        UGUIEventListener.Get(_rightRotation.gameObject).onPointDown = (body) =>
+        {
+            Transform touchObject = RayEvent.Instance.clickObjectOfLeftButton;
+            if (null != touchObject && touchObject.GetComponent<ModelCategory>())
+            {
+                touchObject.GetComponent<ModelCategory>().RightRotation(true);
+            }
+        };
+
+        //右旋转松开
+        UGUIEventListener.Get(_rightRotation.gameObject).onPointUp = (body) =>
+        {
+            Transform touchObject = RayEvent.Instance.clickObjectOfLeftButton;
+            if (null != touchObject && touchObject.GetComponent<ModelCategory>())
+            {
+                touchObject.GetComponent<ModelCategory>().RightRotation(false);
+            }
+        };
+
+        //左旋转按下
+        UGUIEventListener.Get(_leftRotation.gameObject).onPointDown = (body) => 
+        {
+            Transform touchObject = RayEvent.Instance.clickObjectOfLeftButton;
+            if (null != touchObject && touchObject.GetComponent<ModelCategory>())
+            {
+                touchObject.GetComponent<ModelCategory>().LeftRotation(true);
+            }
+        };
+
+        //左旋转松开
+        UGUIEventListener.Get(_leftRotation.gameObject).onPointUp = (body) =>
+        {
+            Transform touchObject = RayEvent.Instance.clickObjectOfLeftButton;
+            if (null != touchObject && touchObject.GetComponent<ModelCategory>())
+            {
+                touchObject.GetComponent<ModelCategory>().LeftRotation(false);
+            }
+        };
+
         //删除模型
         _deleteModel.onClick.AddListener(()=> 
         {
@@ -127,8 +173,9 @@ public class DIYCanvas : MonoBehaviour
                             ControlObjMove.Instance.SetParentNull();
                         }
                     }
+
                     if(TouchObject)
-                    GameObject.Destroy(TouchObject.gameObject);
+                        EventCenter.Instance.PostEvent(EventName.DeleteModel, TouchObject);
                 }
             }
         });

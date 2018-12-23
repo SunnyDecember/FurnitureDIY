@@ -54,11 +54,42 @@ public class Player : MonoBehaviour
 
     private void mouseLeftDown(Vector3 mousePosition, RaycastHit hit)
     {
-        //说明要生成点击的物体
-        if (null != hit.transform && RayEvent.Instance.isReadyInstanceObj)
+        SwitchObjectHighing();
+    }
+
+    /// <summary>
+    /// 切换物体高亮（也就是隐藏上一次高亮，显示当前高亮）
+    /// </summary>
+    private void SwitchObjectHighing()
+    {
+        //取消上一次点击物体的高亮
+        Transform preClickObject = RayEvent.Instance.previousClickObjectOfLeftButton;
+        if (null != preClickObject)
         {
-            EventCenter.Instance.PostEvent(EventName.CreateModel, "House");
+            SetObjectHighing(preClickObject.gameObject, false);
         }
+
+        //显示当前点击物体的高亮
+        Transform currentClickObject = RayEvent.Instance.clickObjectOfLeftButton;
+        if (null != currentClickObject)
+        {
+            SetObjectHighing(currentClickObject.gameObject, true);
+        }
+    }
+
+    /// <summary>
+    /// 设置物体是否高亮
+    /// </summary>
+    /// <param name="isShow"></param>
+    private void SetObjectHighing(GameObject obj, bool isShow)
+    {
+        HighlightableObject hitHighing = obj.GetComponent<HighlightableObject>();
+
+        if (null != hitHighing && isShow)
+            hitHighing.ConstantOn();
+
+        if (null != hitHighing && !isShow)
+            hitHighing.ConstantOff();
     }
 
     private void mouseLeftUp()
@@ -73,11 +104,9 @@ public class Player : MonoBehaviour
                 //给墙指定上墙纸的贴图，然后销毁墙纸
                 Texture wallTexture = selectCategory.GetComponent<MeshRenderer>().material.mainTexture;
                 targetObjCategory.GetComponent<MeshRenderer>().material.mainTexture = wallTexture;
-                //给RayEvent.Instance.clickObjectOfLeftButton = null，防止后续操作的空引用
                 GameObject destroyObj = RayEvent.Instance.clickObjectOfLeftButton.gameObject;
                 RayEvent.Instance.clickObjectOfLeftButton = null;
 
-                //Destroy(destroyObj);
                 EventCenter.Instance.PostEvent(EventName.DeleteModel, destroyObj);
             }
         }
@@ -121,7 +150,7 @@ public class Player : MonoBehaviour
                         _wall = hitTran;
                     }
 
-                    if(selectCategory.AfterBeRay(hitInfo))
+                    if (selectCategory.AfterBeRay(hitInfo))
                         break;
                 }
             }

@@ -98,11 +98,7 @@ public class RayEvent
             return _instance ?? (_instance = new RayEvent());
         }
     }
-
-
-    public bool isReadyInstanceObj = false;
-
-    public GameObject tempInstanceObj;
+    
     /// <summary>
     /// ≥ı ºªØ
     /// </summary>

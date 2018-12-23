@@ -224,7 +224,6 @@ public class AllObjectBuffer
     {
         string ex = Regex.Match(bufferModelNameEX, @"_\d+\Z").ToString();
         string bufferModelName = bufferModelNameEX.Replace(ex, "");
-        Debug.Log(ex);
 
         //load model
         Transform model = ResourceManager.Instance.LoadModel(parent, bufferModelName);

@@ -48,7 +48,7 @@ public class ResourceManager
         } 
 
         GameObject obj = GameObject.Instantiate(originObj) as GameObject;
-        RayEvent.Instance.tempInstanceObj = obj;
+
         //Attach script to model node
         ModelCategory modelCategory = ModelCategory.AttachToModel(obj.transform);
 
@@ -62,6 +62,9 @@ public class ResourceManager
             tool.transform.localEulerAngles = Vector3.zero;
 
             modelCategory.toolNode = tool.transform;
+
+            //set highlighting
+            obj.AddComponent<HighlightableObject>();
         }
 
         //set parent

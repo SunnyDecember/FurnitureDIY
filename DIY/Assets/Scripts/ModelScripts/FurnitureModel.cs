@@ -24,8 +24,7 @@ public class FurnitureModel : ModelCategory
            hitInfo.normal.y > 0.9f && hitInfo.normal.y < 1.1f &&
            hitInfo.normal.z > -0.1f && hitInfo.normal.z < 0.1f)
         {
-            transform.position = hitInfo.point;
-            transform.rotation = Quaternion.LookRotation(hitInfo.normal);
+			AfterBeRay(hitInfo);
             return true;
         }
         return false;
